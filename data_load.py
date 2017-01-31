@@ -10,7 +10,7 @@ This code was copied from the data_utils.py file written by Stanford's CS231n co
 def load_CIFAR_file(filename):
 	'''Load a single file of CIFAR'''
 	with open(filename, 'rb') as f:
-		datadict= pickle.load(f,encoding='latin1')
+		datadict= pickle.load(f)#,encoding='latin1')
 		X = datadict['data']
 		Y = datadict['labels']
 		X = X.reshape(10000, 3, 32, 32).transpose(0,2,3,1).astype('float32')
