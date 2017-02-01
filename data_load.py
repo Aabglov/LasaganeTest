@@ -31,3 +31,10 @@ def load_CIFAR10(directory):
 	Ytr = np.concatenate(ys)
 	Xte, Yte = load_CIFAR_file(os.path.join(directory, 'test_batch'))
 	return Xtr, Ytr, Xte, Yte
+
+def load_SPAM(directory):
+	'''LOAD DAT SWEET, SWEET SPAM'''
+	data = np.genfromtxt(os.path.join(directory,"spambase.data"), delimiter=',')
+	x = data[:,:-1]
+	y = data[:,-1]
+	return x,y
