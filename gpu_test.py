@@ -104,7 +104,7 @@ class TestNetwork:
         return  castData(cost),pred
 
     # RMSprop is for NERDS
-    def Adagrad(self,cost, params, mem, lr=0.1):
+    def Adagrad(self,cost, params, mem, lr=0.01):
         grads = T.grad(cost=cost, wrt=params)
         updates = []
         for p,g,m in zip(params, grads, mem):
@@ -124,8 +124,8 @@ dir = "data/spam"
 #   I don't care if it works or not, just that it runs."
 X_train, y_train = load_SPAM(dir)
 
-X_train = X_train.astype(np.float32)
-y_train = y_train.astype(np.int32)
+X_train = X_train.astype(np.float32)[:25]
+y_train = y_train.astype(np.int32)[:25]
 
 ######################################################################
 # FUNCTIONS AND VARIABLES
@@ -138,12 +138,17 @@ memory_params = tn.memory_params
 
 
 outputs_info=[None,None]
-scan_costs,y_pred = tn.calc_cost(X,Y)
+#scan_costs,y_preds = theano.scan(fn=tn.calc_cost,
+#                              outputs_info=outputs_info,
+#                              sequences=[X,Y]
+#                            )[0] # only need the results, not the updates
+
+scan_costs,y_preds = tn.calc_cost(X,Y)
 
 scan_cost = T.sum(scan_costs)
 
 updates = tn.Adagrad(scan_cost,params,memory_params)
-back_prop = theano.function(inputs=[X,Y], outputs=[scan_cost,y_pred], updates=updates, allow_input_downcast=True)
+back_prop = theano.function(inputs=[X,Y], outputs=[scan_cost,y_preds], updates=updates, allow_input_downcast=True)
 
 print("Model initialized, beginning training")
 
